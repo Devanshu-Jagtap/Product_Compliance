@@ -1,0 +1,30 @@
+# Virtual env
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# SQLite DB (if using SQLite)
+db.sqlite3
+
+# Django migrations (optional to ignore if you want clean start)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Environment files
+.env
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Bytecode files
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
