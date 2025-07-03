@@ -1,9 +1,9 @@
 # users/models.py
-
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group, Permission
 from django.db import models
 from apps.users.base_models import *
 
+from django.apps import apps
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -32,12 +32,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    # objects = CustomUserManager()
-
-    # USERNAME_FIELD = 'email'
-
-    # def __str__(self):
-    #     return f"{self.full_name} ({self.role})"
     groups = models.ManyToManyField(
         Group,
         related_name='custom_user_groups',
@@ -61,13 +55,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
+
+class Specialization(BaseContent):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Profile(BaseContent):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")  
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(upload_to="profile_image/", blank=True, null=True)
     id_proof = models.FileField(upload_to="id_proofs/", blank=True, null=True)
+    # For engineers
+    is_available = models.BooleanField(default=True) 
+    max_capacity = models.IntegerField(default=5)
+    specializations = models.ManyToManyField(Specialization, blank=True) 
 
     def __str__(self):
         return f"Profile of {self.user.email}"
+    def is_engineer(self):
+        return self.user.role == 'engineer'
+    
+    # def active_task_count(self):
+    #     Claim = apps.get_model('claims', 'Claim') 
+    #     return Claim.objects.filter(
+    #         assigned_engineer=self.user,
+    #         status__in=['open', 'in_progress']
+    #     ).count()
+    
+
