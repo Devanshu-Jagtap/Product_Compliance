@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import ClaimSerializer,IssueSerializer,EngineerTaskUpdateSerializer
-from utils.response import api_response
+from apps.utils.response import api_response
 from .models import Issue,EngineerTask
 from rest_framework.permissions import IsAuthenticated
 from .service import assign_engineer_to_claim 

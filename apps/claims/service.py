@@ -1,6 +1,6 @@
 # claim/services.py
-from users.models import Profile
-from .models import EngineerTask
+from apps.users.models import Profile
+from apps.claims.models import EngineerTask
 from django.db.models import Q, Count
 
 def assign_engineer_to_claim(claim):

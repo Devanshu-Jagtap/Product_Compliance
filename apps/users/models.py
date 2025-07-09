@@ -78,11 +78,3 @@ class Profile(BaseContent):
     def is_engineer(self):
         return self.user.role == 'engineer'
     
-    # def active_task_count(self):
-    #     Claim = apps.get_model('claims', 'Claim') 
-    #     return Claim.objects.filter(
-    #         assigned_engineer=self.user,
-    #         status__in=['open', 'in_progress']
-    #     ).count()
-    
-

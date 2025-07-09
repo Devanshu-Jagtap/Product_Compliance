@@ -20,7 +20,7 @@ class Product(models.Model):
         return self.name
 
 class CustomerProduct(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'customer'})
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'customer'},related_name="product_orders")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=100)
     purchase_date = models.DateField()
@@ -30,7 +30,7 @@ class CustomerProduct(models.Model):
         return f"{self.product.name} owned by {self.customer.email}"
     
 class ProductRecall(BaseContent):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="products_recall")
     initiated_by = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'admin'})
     reason = models.TextField()
     date_initiated = models.DateField(auto_now_add=True)

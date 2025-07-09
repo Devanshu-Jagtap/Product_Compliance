@@ -3,7 +3,7 @@ from .models import ProductCategory,Product,CustomerProduct,ProductRecall
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        models = ProductCategory
+        model = ProductCategory
         fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class CustomerProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProduct
         fields = '__all__'
-        read_only_fields = ['customer']  # we set this from backend
+        read_only_fields = ['customer']  
 
     def create(self, validated_data):
         validated_data['customer'] = self.context['request'].user

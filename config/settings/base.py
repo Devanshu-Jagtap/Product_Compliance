@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.products',
     'apps.claims',
     'apps.communication',
+    
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,7 @@ REST_FRAMEWORK = {
 MEDIA_URL = '/media/'  
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 
-ASGI_APPLICATION = "Product_Compliance_Project.asgi.application"  # Replace with your project name
+ASGI_APPLICATION = "config.asgi.application"  # Replace with your project name
 
 CHANNEL_LAYERS = {
     "default": {
@@ -149,3 +150,16 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jagtapdevanshu2@gmail.com'          
+EMAIL_HOST_PASSWORD = 'bdbtqbzdornkotnd'             
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# settings.py
+CELERY_BROKER_URL = 'redis://localhost:6379/0'

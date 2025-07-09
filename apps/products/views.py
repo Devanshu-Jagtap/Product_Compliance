@@ -7,6 +7,8 @@ from apps.utils.response import api_response
 from apps.utils.permissions import IsAdminOrReadOnly,IsCustomerOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from apps.communication.notification import send_bulk_email
+from apps.users.models import User
 # Create your views here.
 
 class ProductCategoryListCreateView(APIView):
@@ -207,16 +209,42 @@ class ProductFilterAPIView(APIView):
 class ProductRecallAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
         serializer = ProductRecallSerializer(data=request.data)
 
         if not serializer.is_valid():
-            return api_response(message="Invalid input", errors=serializer.errors, success=False,code=status.HTTP_400_BAD_REQUEST)
-        
-        serializer.save()
+            return api_response(message="Invalid input", errors=serializer.errors, success=False, code=status.HTTP_400_BAD_REQUEST)
 
-        return api_response(message="Products recall created successfully", data=serializer.data,code=status.HTTP_201_CREATED)
-    
+        recall = serializer.save()
+
+        recalled_product = recall.product
+        users = User.objects.filter(product_orders__product=recalled_product).distinct()
+        recipient_list = [user.email for user in users if user.email]
+
+        if recipient_list:
+            subject = f"Product Recall Notification: {recalled_product.name}"
+            message = f"""
+            Dear Customer,
+
+            This is to inform you that the product "{recalled_product.name}" has been recalled.
+
+            Reason: {recall.reason}
+
+            Resolution Steps: {recall.resolution_steps}
+
+            Regards,
+            Admin Team
+            """
+            # Asynchronously send emails
+            send_bulk_email.delay(subject, message, recipient_list)
+
+        return api_response(
+            message="Product recall created and email task queued successfully",
+            data=serializer.data,
+            code=status.HTTP_201_CREATED
+        )
+
+
     def get(self,request,pk):
         if not pk:
             recalls = ProductRecall.objects.all()
