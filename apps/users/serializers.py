@@ -63,9 +63,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User does not exist.")
         return value
     
-    def create(self,validate_data):
-        user = validate_data.pop('user')
-        return Profile.objects.create(user=user,**validate_data)
+    def create(self, validated_data):
+        user = validated_data.pop('user')
+        specializations = validated_data.pop('specializations', [])
+        profile = Profile.objects.create(user=user, **validated_data)
+        profile.specializations.set(specializations)
+        return profile
     
 class EngineerProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True)

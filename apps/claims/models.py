@@ -66,4 +66,4 @@ class EngineerTask(BaseContent):
     resolution_file = models.FileField(upload_to="task_reports/", null=True, blank=True)
 
     def __str__(self):
-        return f"Task for claim #{self.claim.id} - Engineer: {self.engineer.name}"
+        return f"Task for claim #{self.claim.id} - Engineer: {self.engineer.full_name}"
